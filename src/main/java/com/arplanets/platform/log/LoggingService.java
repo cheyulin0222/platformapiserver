@@ -1,6 +1,6 @@
 package com.arplanets.platform.log;
 
-import com.arplanets.template.exception.ErrorType;
+import com.arplanets.platform.exception.ErrorType;
 import com.arplanets.platform.log.enums.ActionType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,7 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Map;
 
-import static com.arplanets.template.exception.ErrorType.SYSTEM;
+import static com.arplanets.platform.exception.ErrorType.SYSTEM;
 import static com.arplanets.platform.log.enums.BasicActionType.CREATE_LOG;
 
 @Slf4j

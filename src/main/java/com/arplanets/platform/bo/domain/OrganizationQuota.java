@@ -1,6 +1,5 @@
 package com.arplanets.platform.bo.domain;
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Data;
 

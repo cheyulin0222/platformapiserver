@@ -1,6 +1,6 @@
 package com.arplanets.platform.log;
 
-import com.arplanets.template.serializer.TimestampToTaipeiISOSerializer;
+import com.arplanets.platform.serializer.TimestampToTaipeiISOSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

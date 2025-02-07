@@ -1,6 +1,6 @@
 package com.arplanets.platform.log;
 
-import com.arplanets.template.security.JwtVerifyService;
+import com.arplanets.platform.security.JwtVerifyService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;

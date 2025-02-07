@@ -1,6 +1,5 @@
 package com.arplanets.platform.dto.res;
 
-import com.arplanets.platform.bo.domain.OrganizationQuota;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -33,32 +33,32 @@ public interface ActionMapper {
     }
 
 
-    // Repository
-    Action entityToDomain(ActionEntity entity);
-    ActionEntity domainToEntity(Action domain);
-
-
-
-    // Controller
-    ActionCreateData requestToSo(ActionCreateRequest request);
-    default Quota soToDomain(QuotaCreateData request, String id, String user) {
-        return Quota.builder()
-                .quotaId(id)
-                .serviceId(request.getServiceId())
-                .quotaName(request.getQuotaName())
-                .unitType(request.getUnitType())
-                .adjustability(request.getAdjustability())
-                .defaultValues(request.getDefaultValues())
-                .createdBy(user)
-                .updatedBy(user)
-                .build();
-    }
-    default QuotaCreateResponse soToCreateResponse(QuotaData so, ResultMessage resultMessage) {
-        return QuotaCreateResponse.builder()
-                .data(soToResponse(so))
-                .message(resultMessage.getMessage())
-                .build();
-    }
+//    // Repository
+//    Action entityToDomain(ActionEntity entity);
+//    ActionEntity domainToEntity(Action domain);
+//
+//
+//
+//    // Controller
+//    ActionCreateData requestToSo(ActionCreateRequest request);
+//    default Quota soToDomain(QuotaCreateData request, String id, String user) {
+//        return Quota.builder()
+//                .quotaId(id)
+//                .serviceId(request.getServiceId())
+//                .quotaName(request.getQuotaName())
+//                .unitType(request.getUnitType())
+//                .adjustability(request.getAdjustability())
+//                .defaultValues(request.getDefaultValues())
+//                .createdBy(user)
+//                .updatedBy(user)
+//                .build();
+//    }
+//    default QuotaCreateResponse soToCreateResponse(QuotaData so, ResultMessage resultMessage) {
+//        return QuotaCreateResponse.builder()
+//                .data(soToResponse(so))
+//                .message(resultMessage.getMessage())
+//                .build();
+//    }
 
     default String genActionName(String prefix, String tempActionName) {
         return prefix + ":" + tempActionName;

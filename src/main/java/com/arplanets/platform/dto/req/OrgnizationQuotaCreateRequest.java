@@ -1,5 +1,7 @@
 package com.arplanets.platform.dto.req;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 

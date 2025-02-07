@@ -1,6 +1,6 @@
 package com.arplanets.platform.log;
 
-import com.arplanets.template.exception.ErrorType;
+import com.arplanets.platform.exception.ErrorType;
 import com.arplanets.platform.log.enums.ActionType;
 
 import java.util.Map;

@@ -31,8 +31,8 @@ public class QuotaEntity {
     @Enumerated(EnumType.STRING)
     private Adjustability adjustability;
 
-    @Column(name = "info", columnDefinition = "json")
-    private QuotaInfo info;
+//    @Column(name = "info", columnDefinition = "json")
+//    private QuotaInfo info;
 
     @Column(name = "created_by", updatable = false)
     private String createdBy;

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.arplanets.platform.exception.enums.PolicyErrorCode._002;
-import static com.arplanets.platform.log.enums.ActionActionType.*;
 import static com.arplanets.platform.log.enums.PolicyActionType.*;
 
 @RequiredArgsConstructor
