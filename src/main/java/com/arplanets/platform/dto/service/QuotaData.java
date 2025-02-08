@@ -1,6 +1,7 @@
 package com.arplanets.platform.dto.service;
 
 import com.arplanets.platform.enums.AccountLevel;
+import com.arplanets.platform.enums.Activation;
 import com.arplanets.platform.enums.Adjustability;
 import com.arplanets.platform.enums.UnitType;
 
@@ -24,6 +25,8 @@ public class QuotaData {
     private String serviceId;
 
     private String quotaName;
+
+    private Activation active;
 
     private UnitType unitType;
 

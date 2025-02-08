@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceUpdateResponse {
+public class ServiceRecoverResponse {
 
     @Schema(description = "服務資訊")
     private ServiceResponse data;
 
-    @Schema(description = "修改結果")
+    @Schema(description = "還原結果")
     private String message;
 }

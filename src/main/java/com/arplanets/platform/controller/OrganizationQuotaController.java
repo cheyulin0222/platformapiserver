@@ -3,19 +3,13 @@ package com.arplanets.platform.controller;
 import com.arplanets.platform.bo.domain.OrganizationQuota;
 import com.arplanets.platform.dto.req.OrgnizationQuotaCreateRequest;
 import com.arplanets.platform.dto.req.OrgnizationQuotaUpdateRequest;
-import com.arplanets.platform.dto.req.QuotaCreateRequest;
-import com.arplanets.platform.dto.req.QuotaUpdateRequest;
 import com.arplanets.platform.dto.res.*;
-import com.arplanets.platform.dto.service.OrganizationData;
 import com.arplanets.platform.dto.service.OrganizationQuotaData;
 import com.arplanets.platform.dto.service.QuotaData;
 import com.arplanets.platform.dto.service.req.OrganizationQuotaCreateData;
 import com.arplanets.platform.dto.service.req.OrganizationQuotaUpdateData;
-import com.arplanets.platform.dto.service.req.QuotaCreateData;
-import com.arplanets.platform.dto.service.req.QuotaUpdateData;
 import com.arplanets.platform.enums.AccountLevel;
 import com.arplanets.platform.mapper.OrganizationQuotaMapper;
-import com.arplanets.platform.mapper.QuotaMapper;
 import com.arplanets.platform.service.OrganizationQuotaService;
 import com.arplanets.platform.service.OrganizationService;
 import com.arplanets.platform.service.QuotaService;
@@ -61,20 +55,27 @@ public class OrganizationQuotaController {
     ) {
 
         PageRequest pageRequest = PageRequest.of(page, size, direction, sortBy);
-        Page<QuotaData> quotaPage  = quotaService.getByServiceId(serviceId, pageRequest);
 
+        // 取得 Service 下的所有 Quota
+        Page<QuotaData> quotaPage  = quotaService.getQuotasByServiceId(serviceId, pageRequest);
+
+        // 取得 Service 下的所有 QuotaId
         List<String> quotaIds = quotaPage.map(QuotaData::getQuotaId).getContent();
 
+        // 依前面的 QuotaIds 取得 Org 所有有修改過的 quota
         List<OrganizationQuota> orgQuotas = organizationQuotaService.getByOrgIdAndQuotaIds(orgId, quotaIds);
 
+        // 將有修改過資料的取代 default 資料
         Map<String, OrganizationQuota> orgQuotaMap = orgQuotas.stream()
                 .collect(Collectors.toMap(
                         OrganizationQuota::getQuotaId,
                         quota -> quota
                 ));
 
+        // 取得組織的 account level
         AccountLevel level = orgService.get(orgId).getLevel();
 
+        // 依照 account level 返回確切的 value
         var result = quotaPage.map(quotaData ->
             orgQuotaMapper.quotaDataToResponse(quotaData, orgQuotaMap, level)
         );
@@ -90,7 +91,7 @@ public class OrganizationQuotaController {
 
         OrganizationQuotaData orgQuotaData = organizationQuotaService.create(createDate, authentication.getName());
 
-        QuotaData quotaData = quotaService.get(orgQuotaData.getQuotaId());
+        QuotaData quotaData = quotaService.getQuota(orgQuotaData.getQuotaId());
         AccountLevel level = orgService.get(orgQuotaData.getOrgId()).getLevel();
 
         var result = orgQuotaMapper.dataToResponse(orgQuotaData, quotaData, level);
@@ -111,7 +112,7 @@ public class OrganizationQuotaController {
 
         OrganizationQuotaData orgQuotaData = organizationQuotaService.update(updateData, id, authentication.getName());
 
-        QuotaData quotaData = quotaService.get(orgQuotaData.getQuotaId());
+        QuotaData quotaData = quotaService.getQuota(orgQuotaData.getQuotaId());
         AccountLevel level = orgService.get(orgQuotaData.getOrgId()).getLevel();
 
         var result = orgQuotaMapper.dataToResponse(orgQuotaData, quotaData, level);
@@ -126,7 +127,7 @@ public class OrganizationQuotaController {
             String id
     ) {
 
-        quotaService.delete(id);
+        quotaService.deleteQuota(id);
 
         var result = QuotaDeleteResponse.builder()
                 .message(DELETE_SUCCESSFUL.getMessage())

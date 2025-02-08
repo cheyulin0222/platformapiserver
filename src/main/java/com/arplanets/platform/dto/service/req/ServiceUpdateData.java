@@ -1,6 +1,5 @@
 package com.arplanets.platform.dto.service.req;
 
-import com.arplanets.platform.enums.Activation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +15,4 @@ public class ServiceUpdateData {
 
     private String prefix;
 
-    private Activation Active;
 }

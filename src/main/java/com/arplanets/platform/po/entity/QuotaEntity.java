@@ -3,15 +3,20 @@ package com.arplanets.platform.po.entity;
 import com.arplanets.platform.enums.Adjustability;
 import com.arplanets.platform.enums.UnitType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "quota")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class QuotaEntity {
 
     @Id
@@ -31,8 +36,8 @@ public class QuotaEntity {
     @Enumerated(EnumType.STRING)
     private Adjustability adjustability;
 
-//    @Column(name = "info", columnDefinition = "json")
-//    private QuotaInfo info;
+    @Column(name = "default_value")
+    private BigDecimal defaultValue;
 
     @Column(name = "created_by", updatable = false)
     private String createdBy;

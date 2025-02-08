@@ -3,11 +3,11 @@ package com.arplanets.platform.controller;
 import com.arplanets.platform.dto.req.ServiceCreateRequest;
 import com.arplanets.platform.dto.req.ServiceUpdateRequest;
 import com.arplanets.platform.dto.res.*;
-import com.arplanets.platform.dto.req.ServiceActivateRequest;
+import com.arplanets.platform.dto.req.ServiceToggleRequest;
 import com.arplanets.platform.dto.service.req.ServiceCreateData;
 import com.arplanets.platform.dto.service.req.ServiceUpdateData;
 import com.arplanets.platform.mapper.ServiceManagementMapper;
-import com.arplanets.platform.service.ServiceService;
+import com.arplanets.platform.service.ServiceManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -28,7 +31,7 @@ import static com.arplanets.platform.enums.ResultMessage.*;
 @Tag(name = "Services (服務) API")
 public class ServiceManagementController {
 
-    private final ServiceService serviceService;
+    private final ServiceManagementService serviceManagementService;
     private final ServiceManagementMapper serviceManagementMapper;
 
     private static final String SERVICE_ID_PATTERN = "^SERVICE-" +
@@ -53,20 +56,37 @@ public class ServiceManagementController {
         String id
     ) {
 
-        var result = serviceService.getService(id);
+        var result = serviceManagementService.getService(id);
 
-        return ResponseEntity.ok(serviceManagementMapper.build(result));
+        return ResponseEntity.ok(serviceManagementMapper.dataToResponse(result));
+    }
+
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(summary = "查詢所有服務", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<Page<ServiceResponse>> getAllServices(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "ASC") Sort.Direction direction,
+        @RequestParam(defaultValue = "serviceName") String[] sortBy
+    ) {
+
+        PageRequest pageRequest = PageRequest.of(page, size, direction, sortBy);
+
+        var result = serviceManagementService.getAllServices(pageRequest)
+                        .map(serviceManagementMapper::dataToResponse);
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "新增服務", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<ServiceCreateResponse> createService(@RequestBody @Valid ServiceCreateRequest request, Authentication authentication) {
 
-        ServiceCreateData serviceCreateData = serviceManagementMapper.build(request);
+        ServiceCreateData serviceCreateData = serviceManagementMapper.requestToCreateData(request);
 
-        var result = serviceService.createService(serviceCreateData, authentication.getName());
+        var result = serviceManagementService.createService(serviceCreateData, authentication.getName());
 
-        return ResponseEntity.ok(serviceManagementMapper.build(result, CREATE_SUCCESSFUL));
+        return ResponseEntity.ok(serviceManagementMapper.dataToCreateResponse(result));
     }
 
     @PutMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -80,29 +100,42 @@ public class ServiceManagementController {
             Authentication authentication
     ) {
 
-        ServiceUpdateData serviceUpdateData = serviceManagementMapper.build(request);
+        ServiceUpdateData serviceUpdateData = serviceManagementMapper.requestToUpdateData(request);
 
-        var result = serviceService.updateService(serviceUpdateData, id, authentication.getName());
+        var result = serviceManagementService.updateService(serviceUpdateData, id, authentication.getName());
 
-        return ResponseEntity.ok(serviceManagementMapper.buildServiceUpdateResponse(result, UPDATE_SUCCESSFUL));
+        return ResponseEntity.ok(serviceManagementMapper.dataToUpdateResponse(result));
     }
 
-    @PutMapping(value = "/{id}/active", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/{id}/toggle", produces = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary = "修改服務啟用狀態", security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<ServiceActivateResponse> updateServiceActivation(
+    public ResponseEntity<ServiceToggleResponse> toggleService(
             @PathVariable
             @Pattern(regexp = SERVICE_ID_PATTERN, message = SERVICE_ID_MESSAGE)
             @Parameter(description = SERVICE_ID_DESCRITION)
             String id,
-            @RequestBody @Valid ServiceActivateRequest request,
+            @RequestBody @Valid ServiceToggleRequest request,
             Authentication authentication
     ) {
 
-        ServiceUpdateData serviceUpdateData = serviceManagementMapper.build(request);
+        var result = serviceManagementService.toggleService(id, request.getActive(), authentication.getName());
 
-        var result = serviceService.updateService(serviceUpdateData, id, authentication.getName());
+        return ResponseEntity.ok(serviceManagementMapper.dataToToggleResponse(result));
+    }
 
-        return ResponseEntity.ok(serviceManagementMapper.buildServiceActivateResponse(result, UPDATE_SUCCESSFUL));
+    @PutMapping(value = "/{id}/recover", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(summary = "還原服務", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<ServiceRecoverResponse> recoverService (
+            @PathVariable
+            @Pattern(regexp = SERVICE_ID_PATTERN, message = SERVICE_ID_MESSAGE)
+            @Parameter(description = SERVICE_ID_DESCRITION)
+            String id,
+            Authentication authentication
+    ) {
+
+        var result = serviceManagementService.recoverService(id, authentication.getName());
+
+        return ResponseEntity.ok(serviceManagementMapper.dataToRecoverResponse(result));
     }
 
     @DeleteMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -111,10 +144,11 @@ public class ServiceManagementController {
         @PathVariable
         @Pattern(regexp = SERVICE_ID_PATTERN, message = SERVICE_ID_MESSAGE)
         @Parameter(description = SERVICE_ID_DESCRITION)
-        String id
+        String id,
+        Authentication authentication
     ) {
 
-        serviceService.deleteService(id);
+        serviceManagementService.deleteService(id, authentication.getName());
 
         var result = ServiceDeleteResponse.builder()
                 .message(DELETE_SUCCESSFUL.getMessage())

@@ -12,7 +12,8 @@ public enum ResultMessage {
     DELETE_FAILED("刪除失敗"),
     SAVE_SUCCESSFUL("儲存成功"),
     IMPORT_SUCCESSFUL("匯入成功"),
-    IMPORT_FAILED("匯入失敗");
+    IMPORT_FAILED("匯入失敗"),
+    RECOVER_SUCCESSFUL("還原成功");
 
     private final String message;
 

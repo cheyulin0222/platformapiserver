@@ -4,9 +4,11 @@ import com.arplanets.platform.bo.domain.Policy;
 import com.arplanets.platform.bo.domain.Statement;
 import com.arplanets.platform.dto.service.PolicyData;
 import com.arplanets.platform.dto.service.req.*;
+import org.mapstruct.Mapper;
 
 import java.util.List;
 
+@Mapper(componentModel = "spring")
 public interface PolicyMapper {
 
     PolicyData domainToData(Policy policy);
@@ -33,6 +35,9 @@ public interface PolicyMapper {
                 .updatedBy(user)
                 .build();
     }
+
+    Statement map(StatementCreateData statementCreateData);
+    Statement map(StatementUpdateData statementUpdateData);
 
     List<Statement> createDataToDomain(List<StatementCreateData> createData);
     List<Statement> updateDataToDomain(List<StatementUpdateData> updateData);

@@ -9,7 +9,7 @@ import com.arplanets.platform.exception.PlatformApiException;
 import com.arplanets.platform.mapper.ActionMapper;
 import com.arplanets.platform.repository.ActionRepository;
 import com.arplanets.platform.service.ActionService;
-import com.arplanets.platform.service.ServiceService;
+import com.arplanets.platform.service.ServiceManagementService;
 import com.arplanets.platform.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ import static com.arplanets.platform.log.enums.ActionActionType.*;
 @Service
 public class ActionServiceImpl implements ActionService {
 
-    private final ServiceService serviceService;
+    private final ServiceManagementService serviceManagementService;
     private final ActionRepository actionRepository;
     private final ActionMapper actionMapper;
     final private static String PREFIX = "ACTION";
@@ -51,7 +51,7 @@ public class ActionServiceImpl implements ActionService {
     public ActionData create(ActionCreateData createData, String user) {
         String id = StringUtil.generateId(PREFIX);
 
-        ServiceData serviceData = serviceService.getService(createData.getServiceId());
+        ServiceData serviceData = serviceManagementService.getService(createData.getServiceId());
         String prefix = serviceData.getPrefix();
 
         Action action = actionMapper.createDataToDomain(createData, id, user, prefix);
@@ -69,7 +69,7 @@ public class ActionServiceImpl implements ActionService {
             throw new PlatformApiException(_002, UPDATE_ACTION);
         }
 
-        ServiceData serviceData = serviceService.getService(option.get().getServiceId());
+        ServiceData serviceData = serviceManagementService.getService(option.get().getServiceId());
         String prefix = serviceData.getPrefix();
 
         Action action = actionMapper.updateDataToDomain(updateData, option.get(), user, prefix);

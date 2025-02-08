@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class QuotaResponse {
 
     @Schema(description = "服務額度 ID (格式：QUOTA-yyyyMMddHHmmss-UUID)")
@@ -32,8 +34,8 @@ public class QuotaResponse {
     @Schema(description = "服務額度變更方式")
     private Adjustability adjustability;
 
-    @Schema(description = "服務額度列表")
-    private Map<AccountLevel, BigDecimal> defaultValues;
+    @Schema(description = "預設服務額度")
+    private BigDecimal defaultValue;
 
     @Schema(description = "建立建立人員帳號")
     private String createdBy;

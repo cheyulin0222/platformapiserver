@@ -23,5 +23,5 @@ public class QuotaUpdateData {
 
     private Adjustability adjustability;
 
-    private Map<AccountLevel, BigDecimal> defaultValues;
+    private BigDecimal defaultValue;
 }

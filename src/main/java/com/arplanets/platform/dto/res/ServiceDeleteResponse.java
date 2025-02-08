@@ -8,6 +8,6 @@ import lombok.Data;
 @Builder
 public class ServiceDeleteResponse {
 
-    @Schema(description = "新增結果")
+    @Schema(description = "刪除結果")
     private String message;
 }

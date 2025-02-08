@@ -3,8 +3,14 @@ package com.arplanets.platform.dto.req;
 import com.arplanets.platform.enums.Activation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class ServiceActivateRequest {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ServiceToggleRequest {
 
     @NotNull
     @Schema(description = "服務啟用狀態 (ACTIVE-啟用, INACTIVE-停用)")

@@ -24,6 +24,6 @@ public class QuotaCreateRequest {
     @Schema(description = "服務額度變更方式")
     private Adjustability adjustability;
 
-    @Schema(description = "服務額度列表")
-    private Map<AccountLevel, BigDecimal> defaultValues;
+    @Schema(description = "預設服務額度")
+    private BigDecimal defaultValue;
 }

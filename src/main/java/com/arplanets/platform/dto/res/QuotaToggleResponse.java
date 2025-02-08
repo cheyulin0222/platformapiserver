@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceUpdateResponse {
+public class QuotaToggleResponse {
 
-    @Schema(description = "服務資訊")
-    private ServiceResponse data;
+    @Schema(description = "服務額度資訊")
+    private QuotaResponse data;
 
     @Schema(description = "修改結果")
     private String message;

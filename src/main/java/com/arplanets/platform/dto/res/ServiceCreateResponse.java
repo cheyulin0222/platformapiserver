@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ServiceCreateResponse {
 
     @Schema(description = "服務資訊")
-    private ServiceResponse serviceInfo;
+    private ServiceResponse data;
 
     @Schema(description = "新增結果")
     private String message;

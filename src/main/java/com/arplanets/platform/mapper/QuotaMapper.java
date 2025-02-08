@@ -6,73 +6,78 @@ import com.arplanets.platform.dto.res.*;
 import com.arplanets.platform.dto.service.QuotaData;
 import com.arplanets.platform.dto.service.req.QuotaCreateData;
 import com.arplanets.platform.dto.service.req.QuotaUpdateData;
-import com.arplanets.platform.enums.ResultMessage;
+import com.arplanets.platform.enums.Activation;
 import com.arplanets.platform.po.entity.QuotaEntity;
 import org.mapstruct.Mapper;
+
+import static com.arplanets.platform.enums.ResultMessage.CREATE_SUCCESSFUL;
+import static com.arplanets.platform.enums.ResultMessage.UPDATE_SUCCESSFUL;
 
 
 @Mapper(componentModel = "spring")
 public interface QuotaMapper {
 
-    // Get
-    default QuotaData domainToSo(Quota domain) {
-        return QuotaData.builder()
-                .quotaId(domain.getQuotaId())
-                .serviceId(domain.getServiceId())
-                .quotaName(domain.getQuotaName())
-                .unitType(domain.getUnitType())
-                .adjustability(domain.getAdjustability())
-                .defaultValues(domain.getDefaultValues())
-                .createdBy(domain.getCreatedBy())
-                .updatedBy(domain.getUpdatedBy())
-                .createdAt(domain.getCreatedAt())
-                .updatedAt(domain.getUpdatedAt())
-                .build();
-    }
-    QuotaResponse soToResponse(QuotaData so);
-    Quota entityToDomain(QuotaEntity entity);
-    QuotaEntity domainToEntity(Quota domain);
+    // Service
 
+    QuotaData domainToData(Quota domain);
 
-
-    // Create
-    QuotaCreateData requestToSo(QuotaCreateRequest request);
-    default Quota soToDomain(QuotaCreateData request, String id, String user) {
+    default Quota createDataToDomain(QuotaCreateData createData, String id, String user) {
         return Quota.builder()
                 .quotaId(id)
-                .serviceId(request.getServiceId())
-                .quotaName(request.getQuotaName())
-                .unitType(request.getUnitType())
-                .adjustability(request.getAdjustability())
-                .defaultValues(request.getDefaultValues())
+                .serviceId(createData.getServiceId())
+                .quotaName(createData.getQuotaName())
+                .active(Activation.ACTIVE)
+                .unitType(createData.getUnitType())
+                .adjustability(createData.getAdjustability())
+                .defaultValue(createData.getDefaultValue())
                 .createdBy(user)
                 .updatedBy(user)
                 .build();
     }
-    default QuotaCreateResponse soToCreateResponse(QuotaData so, ResultMessage resultMessage) {
-        return QuotaCreateResponse.builder()
-                .data(soToResponse(so))
-                .message(resultMessage.getMessage())
-                .build();
-    }
 
-    // Update
-    QuotaUpdateData requestToSo(QuotaUpdateRequest serviceUpdateRequest);
-    default Quota soToDomain(QuotaUpdateData request, Quota origin, String user) {
+    default Quota updateDataToDomain(QuotaUpdateData updateData, Quota origin, String user) {
         return Quota.builder()
                 .quotaId(origin.getQuotaId())
                 .serviceId(origin.getServiceId())
-                .quotaName(request.getQuotaName() != null ? request.getQuotaName() : origin.getQuotaName())
-                .unitType(request.getUnitType() != null ? request.getUnitType() : origin.getUnitType())
-                .adjustability(request.getAdjustability() != null ? request.getAdjustability() : origin.getAdjustability())
-                .defaultValues(request.getDefaultValues() != null ? request.getDefaultValues() : origin.getDefaultValues())
+                .quotaName(updateData.getQuotaName() != null ? updateData.getQuotaName() : origin.getQuotaName())
+                .active(origin.getActive())
+                .unitType(updateData.getUnitType() != null ? updateData.getUnitType() : origin.getUnitType())
+                .adjustability(updateData.getAdjustability() != null ? updateData.getAdjustability() : origin.getAdjustability())
+                .defaultValue(updateData.getDefaultValue() != null ? updateData.getDefaultValue() : origin.getDefaultValue())
                 .updatedBy(user)
                 .build();
     }
-    default QuotaUpdateResponse soToUpdateResponse(QuotaData quotaData, ResultMessage resultMessage) {
-        return QuotaUpdateResponse.builder()
-                .data(soToResponse(quotaData))
-                .message(resultMessage.getMessage())
+
+    // Controller
+
+    QuotaResponse dataToResponse(QuotaData so);
+
+    QuotaCreateData requestToCreateData(QuotaCreateRequest request);
+
+    default QuotaCreateResponse dataToCreateResponse(QuotaData data) {
+        return QuotaCreateResponse.builder()
+                .data(dataToResponse(data))
+                .message(CREATE_SUCCESSFUL.getMessage())
                 .build();
     }
+
+    QuotaUpdateData requestToUpdateData(QuotaUpdateRequest serviceUpdateRequest);
+
+    default QuotaUpdateResponse dataToUpdateResponse(QuotaData data) {
+        return QuotaUpdateResponse.builder()
+                .data(dataToResponse(data))
+                .message(UPDATE_SUCCESSFUL.getMessage())
+                .build();
+    }
+
+    default QuotaToggleResponse dataToToggleResponse(QuotaData data) {
+        return QuotaToggleResponse.builder()
+                .data(dataToResponse(data))
+                .message(UPDATE_SUCCESSFUL.getMessage())
+                .build();
+    }
+
+
+    Quota entityToDomain(QuotaEntity entity);
+    QuotaEntity domainToEntity(Quota domain);
 }

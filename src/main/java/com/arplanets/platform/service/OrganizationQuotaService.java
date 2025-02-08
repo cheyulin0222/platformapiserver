@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrganizationQuotaService {
 
-    OrganizationQuotaData get(String id);
+    OrganizationQuotaData getOrganizationQuota(String id);
     List<OrganizationQuota> getByOrgIdAndQuotaIds(String orgId, List<String> quotaIds);
     OrganizationQuotaData create(OrganizationQuotaCreateData createData, String user);
     OrganizationQuotaData update(OrganizationQuotaUpdateData updateData, String id, String user);

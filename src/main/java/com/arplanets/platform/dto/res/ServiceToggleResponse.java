@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceActivateResponse {
+public class ServiceToggleResponse {
 
     @Schema(description = "服務資訊")
-    private ServiceResponse serviceInfo;
+    private ServiceResponse data;
 
     @Schema(description = "修改結果")
     private String message;

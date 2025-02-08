@@ -6,7 +6,6 @@ import com.arplanets.platform.po.entity.QuotaEntity;
 import com.arplanets.platform.repository.QuotaRepository;
 import com.arplanets.platform.repository.jpa.QuotaJpaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-@Profile("mysql")
 @RequiredArgsConstructor
 public class QuotaRespositoryJpaImpl implements QuotaRepository {
 

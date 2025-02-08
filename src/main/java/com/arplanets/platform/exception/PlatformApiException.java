@@ -11,7 +11,6 @@ public class PlatformApiException extends RuntimeException{
     private final String errorMessage;
     private final ActionType actionType;
 
-
     public PlatformApiException(BusinessExceptionDisplay code, ActionType actionType) {
         super(code.description().concat("  ").concat(code.message()));
         this.code = code;
